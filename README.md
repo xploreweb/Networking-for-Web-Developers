@@ -7,6 +7,7 @@ https://www.udacity.com/course/networking-for-web-developers--ud256
 Before taking this course, it's also useful to follow the Audacity courses
 - Linux Command Line Basics
 - Configuring Linux Web Servers
-- Designing RESTful APIs<br/>
+- Designing RESTful APIs
+
 To do the exercises in this course, I'm using Linux-based hosting service https://cloud.google.com/shell
 
