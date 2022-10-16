@@ -1,5 +1,5 @@
 # Networking-for-Web-Developers
-Summary of the Udacity free course Networking for Web Developers
+Summary of the Udacity free course Networking for Web Developers<br/>
 https://www.udacity.com/course/networking-for-web-developers--ud256
 
 # From Ping to HTTP
