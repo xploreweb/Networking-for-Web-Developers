@@ -11,7 +11,7 @@ Before taking this course, it's also useful to follow the Audacity courses
 To do the exercises in this course, I'm using Linux-based hosting service https://cloud.google.com/shell
 
 # From Ping to HTTP
-...
+Ping is simplier than HTTP, but HTTP is not based on ping. 
 
 # Names and Addresses
 ...
