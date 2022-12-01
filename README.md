@@ -12,6 +12,13 @@ To do the exercises in this course, I'm using Linux-based hosting service https:
 
 # From Ping to HTTP
 
+# Names and Addresses
+
+# Addressing and Network
+
+# Protocol Layers
+
+# Big Networks
 
 ...
 
