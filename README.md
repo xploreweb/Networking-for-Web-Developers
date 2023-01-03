@@ -33,11 +33,12 @@ printf 'HEAD / HTTP/1.1\r\nHost: en.wikipedia.org\r\n\r\n' | nc en.wikipedia.org
 
 PRINTF AND NETCAT LAYERS
 printf and nc are two different layers of actvity, where printf gives a HTTP request, and nc sedning string over network and get the respond back.
-Layers:           Protocols:            Concepts:
-- Appication      HTTP, SSH             URLs, passwords
-- Transport       TCP, UDP              port numbers, sessions
-- Internet        IP                    IP addresses, routes
-- Hardware        WiFi, Ethernet, DSL   signal strength, access points
+| Layers:          | -Protocols:         |  -Concepts:                        |
+| ----------------  --------------------  ----------------------------------- |
+| Appication       | HTTP, SSH           |  URLs, passwords                   |
+| Transport        | TCP, UDP            |  port numbers, sessions            |
+| Internet         | IP                  |  IP addresses, routes              |
+| Hardware         | WiFi, Ethernet, DSL |  signal strength, access points    |
 
 
 # Names and Addresses
