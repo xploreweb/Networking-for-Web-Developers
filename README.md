@@ -31,9 +31,10 @@ Näide:
 printf 'HEAD / HTTP/1.1\r\nHost: en.wikipedia.org\r\n\r\n' | nc en.wikipedia.org 80
 (output of printf string as a input for the nc program, host: what web site do we want from that host; nc: what host should nc connect to?)
 
-PRINTF AND NETCAT LAYERS
+**PRINTF AND NETCAT LAYERS**
 printf and nc are two different layers of actvity, where printf gives a HTTP request, and nc sedning string over network and get the respond back.
-| Layers:          | -Protocols:         |  -Concepts:                        |
+
+| Layers:          | Protocols:          |  Concepts:                         |
 | ----------------  --------------------  ----------------------------------- |
 | Appication       | HTTP, SSH           |  URLs, passwords                   |
 | Transport        | TCP, UDP            |  port numbers, sessions            |
