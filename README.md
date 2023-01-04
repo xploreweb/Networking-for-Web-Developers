@@ -113,6 +113,37 @@ Dig has sections:
 - Additional information
 
 ## DNS Record Types
+There are many different types of DNS records. Literally, there are dozens of them.
+- A records - to look up the IPv4 address of another host.
+- CNAME - stand for canonical name. Used to make an alias from one name to another.
+- AAAA (the quad-A record type)- stand for an IPv6 address
+- NS record type - stand for a DNA name server. An NS record for a particular domain says what DNS servers have the records for that domain.
+
+## DNS Cashing Server
+
+DNS is a distributed directory. Around the world there are several root servers which direct requests to top level domain servers (.com, .net, .org and some others). This means that no one DNS server needs to know all the records for all the names and domains in the world. The records for a particular domain, will be found in the authoritative name servers for that domain.
+
+To make it faster, and more complicated, the DNS server that the client to resolve talks normally to a nearby caching DNS server. For a home user, that might be the local home router, or it might be run by their ISP, or it could be a well known
+DNS service like Google Public DNS. When caching server receives a query from a client, first it consults its local cache. If the cache doesn't know what the record is, the caching server recursively resolves the query, forwarding to
+the appropriate nameservers. Possibly first at the root and then at the top level domain, and then at the lower level domain until eventually it gets back an answer. Then it stores that result in its cache so it doesn't have to run the same query over and over again every time you look it up.
+
+Caching can cause problems, when the IP address of the web site has been changed, then clients who use that cache will see the old address instead of the new one. To cut down on this kind of thing DNS records have a time to live, or TTL, which tells caches how long to cache them for. After the TTL expires, caching servers have to go back to the authoritative server again, look the record up, to make sure that their information is fresh.
+
+## DNS and HTTP
+Domain names are also essential to several HTTP features, including cookie security and SSL.. A single web server can handle requests from multiple sites which it tells apart by their domain names.
+
+- Apache calls this a virtual host configuration.
+- NGiNX calls it having multiple server blocks.
+
+You have to tell that web server what host name, really what domain name, you're expecting to talk to. When a web app sets a cookie, it sets that cookie for a particular domain name, and further requests to that demand will get that cookie sent back. SSL encryption certificates are issued for particular domains. SSL serves several different security purposes. By encrypting the traffic between browser and server, it prevents networks in the middle from reading private data. But it also lets the user's browser verify that the site they're getting data from is actually the site that they expect.
+
+##IPv4 and IPv6
+There are two major versions of the Internet protocol in use today: IPv4 and IPv6. IPv4 is the older one that the majority of Internet traffic is using today.
+
+The IPv4 addresses are usually written as dotted quads. That's four numbers separated by dots (8.8.8.8). Each of these four numbers is one byte or octet, or 8-bits, which means that mathematically it could be a value from 0 to 255.
+
+Each address has to be different from every other address on the same network. With a given number of bits you can only make a certain number of distinct values.
+
 
 
 # ADDRESSING AND NETWORK
