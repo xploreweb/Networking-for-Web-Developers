@@ -62,7 +62,7 @@ Note that this also displays the headers sent by the web server.  They can be fi
 The highest port number is 65535.
 On most systems the lowest 1,024 ports from 0 up to 1,023, are reserved for programs that are started by the system superuser account or root on Unix. It's like those ports are reserved parking spots. That's why when you start up a web server which runs on port 80 you have to do it as root or with the sudo command. For security a web server gets rid of its root privileges once it starts up. But it needs to start with them so it can listen on port 80. So if you use sudo to run nc as root, it can listen on port 1,000 just fine.
 
-**ONE LISTENING SERVER PER PORT***
+**ONE LISTENING SERVER PER PORT**
 Normally, only one program can listen on a given port on a machine at a time. But once a program starts, it can run threads or child processes that handle incoming connections on a port, or a loop between several connections and handle all of them. That's what a web server does to be able to handle more than one connection at a time. NC-L doesn't do that. It's not really a full server as such just sort of a listener that only accepts a single connection.
 
 There's a standard Linux program that you can use to find out which programs are listening or otherwise, using network connections. The lsof program, name stands for list open files, and it has an option -i, to make it list internet sockets specifically. You'll have to run it using sudo to give it root privileges.
@@ -170,7 +170,7 @@ Some of the interfaces:
 
 And there are other kinds of interfaces as well, for example you might have a tunnel to another part of the network, virtual machine interface connecting the host operating system and the guest operating system etc.
 
-## Routers and Deafault Gateways
+## Routers and Default Gateways
 A router is a device that connects two different IP networks. It acts as a gateway. Hosts on one network that want to send traffic to the other one, forward that traffic through the router. While most hosts might have only one interface with an interesting IPv4 address on it, a router will have two or more. The host on a local network knows about a default gateway, which is a router that's connected toward the rest of the Internet. Computers that are attached to the same switch or WiFi access point or other network hardware are normally local to each other. They can directly send packets to one another without going through a different network. And as we saw before they have IP addresses on the same net block.
 
 ## NAT
