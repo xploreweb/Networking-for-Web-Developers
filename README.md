@@ -144,10 +144,55 @@ The IPv4 addresses are usually written as dotted quads. That's four numbers sepa
 
 Each address has to be different from every other address on the same network. With a given number of bits you can only make a certain number of distinct values.
 
+An IPv4 address is actually a 32-bit or 4 octet value, which we usually write as a dotted quad. But writing an IP address as four decimal numbers is just a convention to make it easier to read. When it's used between computers it's just a 32 bit long string of bits.
 
 
 # ADDRESSING AND NETWORK
-...
+Not all of the possible 32 bit IPv4 values are used for real addresses. Some of them are reserved for pecial protocols. Some of them are reserved for internal private networks. Some of them are for testing or for documentation. In fact, just over one-eighth of all possible IPv4 addresses, are set aside for something other
+than addressing public hosts.
+
+## Netblocks and Subnets
+Computers that are on the same network, like an individual home or business or school, usually have IP addresses that are similar to each other. All of the addresses on a specific network block share a particular prefix. And computers that are on the same network block, can communicate with each other without going through a router. A network with a longer prefix has less of the 32-bit address left over to distinguish particular hosts, and a network with a shorter prefix has more addresses for hosts, so it's a larger network. For instance, if you have a network with a 24-bit prefix, that means there's eight bits left over for the host part of addresses, we would conventionally write this as /24.
+
+## Subnet Masks
+Subnet mask is another way to write a network size, which is a binary number made of ones and zeroes, to indicate the size of the network. Subnet masks is often seen in network configurations on hosts. Subnet masks are 32-bit values that are usually written as decimal dotted quads. The mask for a /24 network in binary, is 24 ones followed by eight zeroes and in decimal 255.255.255.0.
+
+For /16 network a subnet mask wil be 255.255.0.0.<br>
+FOr /14 network a subnet mask will be 255.252.0.0.
+
+## Interfaces
+It's more accurate to say that addresses don't belong to hosts so much as they belong to interfaces. A host is a laptop, and it can have multiple network interfaces and each interface can have zero or more addresses.
+
+Some of the interfaces:
+- a wired Ethernet interface 
+- a WiFi interface
+- a loop back interface - which can be used for talking to itself
+
+And there are other kinds of interfaces as well, for example you might have a tunnel to another part of the network, virtual machine interface connecting the host operating system and the guest operating system etc.
+
+## Routers and Deafault Gateways
+A router is a device that connects two different IP networks. It acts as a gateway. Hosts on one network that want to send traffic to the other one, forward that traffic through the router. While most hosts might have only one interface with an interesting IPv4 address on it, a router will have two or more. The host on a local network knows about a default gateway, which is a router that's connected toward the rest of the Internet. Computers that are attached to the same switch or WiFi access point or other network hardware are normally local to each other. They can directly send packets to one another without going through a different network. And as we saw before they have IP addresses on the same net block.
+
+## NAT
+The router connects to ISP and gets a single real public IP address (ISPs to assign only one address to each household, office, or other customer), and then it assigns private addresses to all of devices in this private network. Private IP addresses come off of one of three reserved IP address netblocks. The most common private IP addresses found on home routers are in the network 192.168.0.0/24. With the default gateway of 192.168.0.1, this is only one of very many private IP address possibilities.
+
+Private IP addresses are used with a system called NAT or network address translation. The way that it works is that whenever traffic goes between the private network behind the router and the public internet, the router has to rewrite or translate to the network addresses on it. The router maintains a map of
+which inside addresses and ports are connected to what public internet addresses and ports.
+
+This is specified in an internet standard called RFC 1918.
+
+## Private and Public IP Address
+Private addresses aren't private in the sense of being secret or personal. They're private, because they're only any good on the local network. They can't be used to directly on the public internet, because they're not actually unique. Thousands or maybe millions of people in the world are using IP addresses in the 192.168 range, but each one of these is behind a different NAT router.
+
+There are three different blocks of IP addresses which are reserved for this private use. By design, these addresses should never be used on the public internet. They're used inside homes, offices, data centers, on mobile networks and so on. Web servers and other internet services don't see your private address. They see the public address.
+
+## IPv6
+All traffic on the Internet is split up into messages called packets. And each packet has the addresses of its source or sender and it's destination or intended recipient on it. Each server or other host that you want to talk to, it needs to have a distinct IP address. But there aren't enough IP addresses for all the computers today. There's about 4 billion IPv4 addresses available for hosts, and there's 7 billion people on the planet.
+
+NAT is not a super great solution to the shortage of addresses in IPv4. It's a workaround. The solution is IPv6. IPv6 is the successor to IPv4. IPv6 fixes the address shortage problem by having much longer addresses, 128 bits or 16 octets long. That's 4 times as long as an IPv4 address. But that means that IPv6 addresses are kind of long.
+
+So the world doesn't need nat with V6. There's enough addresses for every
+device to get a unique public address. And IPv6 adoption started out very slow but it's been growing strong for several years now. IPv4 and IPv6 are different network spaces.
 
 # PROTOCOL LAYERS
 ...
