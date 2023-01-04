@@ -1,4 +1,4 @@
-# Networking-for-Web-Developers
+# NETWORKING FOR WEB DEVELOPERS
 Summary of the Udacity free course Networking for Web Developers<br/>
 https://www.udacity.com/course/networking-for-web-developers--ud256
 
@@ -10,7 +10,7 @@ Before taking this course, it's also useful to follow the Audacity courses
 
 To do the exercises in this course, I'm using Linux-based hosting service https://cloud.google.com/shell
 
-# From Ping to HTTP
+# FROM PING TO HTTP
 Ping is an individual 'package' what will be sent to an exact computer and back to sender. Ping can give us information:
 - Our computer has Internet access
 - The destination computer - is up and running
@@ -27,11 +27,11 @@ The Netcat ( nc ) command is a command-line utility for reading and writing data
 
 | (vertical bar) is a pipe between input and output program, take it from input and fit to the output.
 
-Näide: 
+An Example:<br>
 printf 'HEAD / HTTP/1.1\r\nHost: en.wikipedia.org\r\n\r\n' | nc en.wikipedia.org 80
 (output of printf string as a input for the nc program, host: what web site do we want from that host; nc: what host should nc connect to?)
 
-**PRINTF AND NETCAT LAYERS**
+**PRINTF AND NETCAT LAYERS**<br>
 printf and nc are two different layers of actvity, where printf gives a HTTP request, and nc sedning string over network and get the respond back.
 
 | Layers | Protocols | Concepts |
@@ -41,18 +41,87 @@ printf and nc are two different layers of actvity, where printf gives a HTTP req
 | Internet | IP | IP addresses, routes |
 | Hardware | WiFi, Ethernet, DSL | signal strength, access points |
 
+The nc (or netcat) utility is used for just about anything under the sun involving TCP, UDP, or UNIX-domain sockets.  It can open TCP connections, send UDP packets, listen on arbitrary TCP and UDP ports, do port scanning, and deal with both IPv4 and IPv6.  Unlike telnet(1), nc scripts nicely, and separates error messages onto standard error instead of sending them to standard output, as telnet(1) does with some.
+
+Common NC uses include:
+- simple TCP proxies
+- shell-script based HTTP clients and servers
+- network daemon testing
+- a SOCKS or HTTP ProxyCommand for ssh(1)
+- and much, much more...
+
+**LISTENING THE PORT**<br>
+Listening on a port is a very simple sort of being a server. A program that listens on a TCP port is waiting for another program to connect to that port. Once that happens, the two programs can send data back and forth.
+ 
+**TALKING TO SERVERS**<br>
+It is sometimes useful to talk to servers “by hand” rather than through a user interface.  It can aid in troubleshooting, when it might be necessary to verify what data a server is sending in response to commands issued by the client.  For example, to retrieve the home page of a web site:<br>
+$ printf "GET / HTTP/1.0\r\n\r\n" | nc host.example.com 80<br>
+Note that this also displays the headers sent by the web server.  They can be filtered, using a tool such as sed(1), if necessary. 
+
+**PORT NUMBERS**<br>
+The highest port number is 65535.
+On most systems the lowest 1,024 ports from 0 up to 1,023, are reserved for programs that are started by the system superuser account or root on Unix. It's like those ports are reserved parking spots. That's why when you start up a web server which runs on port 80 you have to do it as root or with the sudo command. For security a web server gets rid of its root privileges once it starts up. But it needs to start with them so it can listen on port 80. So if you use sudo to run nc as root, it can listen on port 1,000 just fine.
+
+**ONE LISTENING SERVER PER PORT***
+Normally, only one program can listen on a given port on a machine at a time. But once a program starts, it can run threads or child processes that handle incoming connections on a port, or a loop between several connections and handle all of them. That's what a web server does to be able to handle more than one connection at a time. NC-L doesn't do that. It's not really a full server as such just sort of a listener that only accepts a single connection.
+
+There's a standard Linux program that you can use to find out which programs are listening or otherwise, using network connections. The lsof program, name stands for list open files, and it has an option -i, to make it list internet sockets specifically. You'll have to run it using sudo to give it root privileges.
+
+***
+
+Net Cat gives us a simple model of a program using the network. But it's a lot simpler than the that a standard web browser and server use the network. Browsers and servers don't just handle a single request or a few requests one after the other. They also work on several requests at the same time. When your browser loads a web page from a server. It usually has to load a lot of different files. The HTML itself, plus images, scripts, CSS, and other data. The more that it can do this in parallel the faster it can render that page onto your screen.
+Data that the server is sending to you isn't in sync with what it's sending to that other person's browser. And there are a lot of different ways that programs can handle multiple connections at once.
+
+One of the most basic ones is what early web servers did:whenever a new connection comes in, the server process forks, it asks the operating system to split it in two, like a cell dividing. A different model that many more recent servers use is to create a pool of processes or threads, each of which can handle one connection at a time. And this is faster than starting new processes. But it does have the downside that there's a limit to how many requests may be handled at once before
+things start to slow down.
+
+And finally a third model is to have a single process that quickly switches between handling requests as they become available.
+
+Before your server can handle a request, the client has to know how to get in touch with your server - DNS.
 
 
-# Names and Addresses
+# NAMES AND ADDRESSES
+
+An IP address is used to designate a particular destination on the Internet, typically a particular machine. Every message that travels over the Internet, a web request, an email, a ping etc is split into packets, and every one
+of these packets has the IP address of the machine it came from and
+where it's going to.
+
+**HOST**<br>
+is just a machine on the Internet, particularly one that might host services.
+
+**ENDPPOINTS of a connection**<br>
+are two machines or programs that are communicating over connection.
+
+## Ping a hostname
+If you take the name of a host, and ping it, you'll see an IP address along with the ping results. The ping command has to look up the IP address of the host first 
+before it can actually send it a ping message. Ping keeps running forever until you stop it with Ctrl+C. But you can tell it how many pings to do with a -c option. For instance, -c 7 will have it send just 7 pings and then exit.
+
+## DNS Domains
+Hostname (www.example.com) gets translated into an IP address through the Domain Name System,or DNS. DNS is a worldwide distributed directory of network information. It stores a wide variety of records but the best known kind of DNS
+record is the A record. A for address, which maps a name like www.example.net to an IPv4 address. Client programs such as web browsers look up these records in order to find the address of a web site or another service. The creator of a website needs to set up DNS records for it so that users can access it by name.
+
+##The Host Command
+The host command is a basic utility for looking up records in DNS. It will query your OS name service. Which usually ends up sending a request to whatever DNS server your computer's configured to use. There are lots of kinds of DNS records but the default one for looking up the addresses of IPv4 hosts is an a type of record for address.
+
+## Dig Command for the DNS Records
+The 'dig' command is a same kind of information as host, but in a more technical and complete form. The dig tool shows the same information more or less, but in a form that's more readable for scripts and is closer to the way that it's stored in the DNS server's configuration file. 
+
+Dig has sections:
+- Query
+- Question
+- Answer
+- Additional information
+
+## DNS Record Types
+
+
+# ADDRESSING AND NETWORK
 ...
 
-# Addressing and Network
+# PROTOCOL LAYERS
 ...
 
-# Protocol Layers
-...
-
-# Big Networks
+# BIG NETWORKS
 
 ...
 
