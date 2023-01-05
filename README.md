@@ -207,10 +207,70 @@ HTTP and other applications -> TCP -> IP, the Internet Protocol
 | IP | IP addresses, packets | OS kernel, routers | various |
 | WiFi | access points, WPA passwords | device drivers | network unavailable |
 
+## Ping and DNS in tcpdump
+TCP dump is a tool what can use to display informatiom about network traffic between hosts and networks. 
 
+To let tcpdump interpret correctly the information that going within a DNS query and response we will have to add the -s option for specifying the amount of data to capture for each packet. By setting it to 0 we will be able to capture the entire packet. This value actually is 262144 which it is far more data than a packet is going to usually handle (1500 would be closer but it also depends on the underlying network)
+
+Also adding -n will prevent tcpdump to resolve IP addresses which for troubleshooting it is also a good thing to add. The final command would be: 'tcpdump -n -s 0 port 53' (DNS uses a port 53).
+
+## HTTP in tcpdump
+We can use tcpdump to look at the packets that the machine uses to talk to a web server. You can see a timestamp, IP address of the web server and a machine - the metadata.
+
+## Sequence Diagrams
+Sequence diagrams remind us to keep things in order and to make sure that our notions of what's going on in the network don't assume that servers can see the future.
+
+![image](https://user-images.githubusercontent.com/115207563/210814345-6505677f-bd7d-4ddd-9c2d-8784a767491c.png)
+Diagram of an HTTP connection using keep-alive.<br>
+The client since an HTTP GET request with a connection keep alive header. The server sends a response and once a client has received that response it can send another request over the same connection and so on. A sequence diagram always represents some particular level of a protocol.
+
+## TCP Flags
+In low-level computer languages, a flag is a Boolean value — a true or false value — that is stored in memory as a single bit. If a flag bit is 1, we say the flag is set. If the flag bit is 0, the flag is cleared (or unset). Usually, flags come in groups, each of which can be set or cleared.
+
+**The six basic TCP flags**<br>
+The original TCP packet format has six flags. Two more optional flags have since been standardized, but they are much less important to the basic functioning of TCP. For each packet, tcpdump will show you which flags are set on that packet.
+- SYN (synchronize) [S] — This packet is opening a new TCP session and contains a new initial sequence number.
+- FIN (finish) [F] — This packet is used to close a TCP session normally. The sender is saying that they are finished sending, but they can still receive data from the other endpoint.
+- PSH (push) [P] — This packet is the end of a chunk of application data, such as an HTTP request.
+- RST (reset) [R] — This packet is a TCP error message; the sender has a problem and wants to reset (abandon) the session.
+- ACK (acknowledge) [.] — This packet acknowledges that its sender has received data from the other endpoint. Almost every packet except the first SYN will have the ACK flag set.
+- URG (urgent) [U] — This packet contains data that needs to be delivered to the application out-of-order. Not used in HTTP or most other current applications.
+
+If the server doesn't want to accept the connection, it may not send anything at all. Or it may send a packet with the RST flag
+
+## Timeouts and Errors
+TCP has a number of built in timers. If it takes too long to hear back from the server we're trying to connect to, TCP will abandon the attempt to make a connection and give an error to the application.
+
+The following problems might cause a TCP session to time out for instance between a browser and a web server
+- the host at the other end is powered off
+- the cable loss between you and your ISP
+- could a timeout because you're connecting to a server that doesn't exist
 
 # BIG NETWORKS
+Here are some of the ways that network speed and other properties affect your users experience of your web apps.
 
-...
+You can see all of the hops involved in getting your traffic from you to a distant server by using a traceroute tool. The most common traceroute tool is called just that, traceroute. You can give it a host name or an IP address and it will display the route all the IP addresses of all the routers that it took for traffic to get there. There are more advanced traceroute tools such as MTR which will repeatedly trace and can sometimes show you different routes the traffic may take.
 
-The course is in progress...
+**Ping Mechanism**<br>
+When you've used Ping, it's given your numbers for the round trip time between you and the machine you're pinging.<br>
+A round trip time is how long it takes for a packet to get from you to the other end. But ping can tell how much time has elapsed between when it that packet and when it received a response.
+
+**Traceroute/TTL Mechanism**<br>
+The ability to trace out packet paths wasn't intentionally built into the Internet protocols. The safety feature traceroute makes use of. Every packet has a time to live or TTL field, which starts at some large number and is reduced by one each time that packet hits a router. As it moves through the network, each router reduces the TTL on the packet by one as it passes it on, all the way until it finally gets to its destination. This means that if routers are misconfigured so that packets flow around in an infinite loop, eventually the time to live (TTL) on each packet will drop to zero, and it will expire. This helps keep momentary loops from crashing large parts of the network with an overload of traffic. When a packet's TTL expires, the router that last received it, sends a tiny error message back to the packet's original sender. And that message says that the packet's TTL expired, and it gives the address of the router that saw that packet die.
+
+Traceroute and tracert are computer network diagnostic commands for displaying possible routes (paths) and measuring transit delays of packets across an Internet Protocol (IP) network. The history of the route is recorded as the round-trip times of the packets received from each successive host (remote node) in the route (path); the sum of the mean times in each hop is a measure of the total time spent to establish the connection. Traceroute proceeds unless all (usually three) sent packets are lost more than twice; then the connection is lost and the route cannot be evaluated.
+
+## Bandwidth
+The maximum amount of data transmitted over an internet connection in a given amount of time.
+
+## Firewalls & Filtering
+Firewalls are devices that network operators can use to filter traffic that's coming into or leaving their network. A firewall is one example of a class of network devices called middleboxes — devices that inspect, modify, or filter network traffic. 
+
+A firewall can be a real boon to an organization's network security. The most common configuration for a firewall is to drop any incoming traffic except traffic to (host, port) pairs that are supposed to be receiving connections from the Internet. This lets the network administrator be sure that other machines on the network — like backend databases or administrative systems — aren’t going to get direct attacks from outside.
+
+## Proxies & NAT
+With NAT, several devices can access Internet resources through a single public IP address, with the NAT device using port numbers to match up connections on the inside and outside.
+
+For end-users, NAT devices overlap with firewalls. Typical home routers can act as both a NAT and a simple firewall, often having the ability to block or filter at a very basic level. At a larger scale, ISPs and other organizations have deployed NAT devices for their whole customer networks, called carrier-grade NAT. This is very common for mobile networks, and also for ISPs in the developing world, where there never were anywhere near enough addresses allocated for the number of users.
+
+Another way that can happen is through the use of web proxies. Whereas a NAT works at the IP level, rewriting packets, a web proxy works at the HTTP level, taking queries from browsers and sending them out to web servers. Many organizations use web proxies for caching, including some ISPs. From the standpoint of a web developer or site operator, traffic from a busy proxy looks much the same as traffic from a busy NAT: queries for many users, on many actual computers, are funneled through a single public IP address.
