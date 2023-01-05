@@ -195,7 +195,19 @@ So the world doesn't need nat with V6. There's enough addresses for every
 device to get a unique public address. And IPv6 adoption started out very slow but it's been growing strong for several years now. IPv4 and IPv6 are different network spaces.
 
 # PROTOCOL LAYERS
-...
+In Netcat is a TCP Session which lets two programs send strings of bytes back and forth over the network. TCP is kind of the middle layer of a stack of networking protocols or protocol stack which supports all sorts of different internet applications.<br>
+HTTP and other applications -> TCP -> IP, the Internet Protocol
+
+![image](https://user-images.githubusercontent.com/115207563/210768998-b7da7859-cead-4482-a52b-ad9ab3fb2b6a.png)
+
+| PROTOCOL | concepts | where the code is | failures |
+| --- | --- | --- | --- |
+| HTTP | URLs, resources, verbs, cookies... | Flask, Apache, browsers... | error codes, slow response |
+| TCP | ports, sessions, stream sockets | OS kernel, system libraries | broken connections, timeouts |
+| IP | IP addresses, packets | OS kernel, routers | various |
+| WiFi | access points, WPA passwords | device drivers | network unavailable |
+
+
 
 # BIG NETWORKS
 
